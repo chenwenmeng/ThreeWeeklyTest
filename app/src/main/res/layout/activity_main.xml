@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bwie.demo.MainActivity">
+
+    <com.youth.banner.Banner
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_heightPercent="40%"
+        app:delay_time="2000"
+        app:is_auto_play="true"
+        app:title_textsize="15sp"
+        app:title_textcolor="@color/title"
+        app:indicator_margin="5dp"
+        app:indicator_drawable_selected="@drawable/page_indicator_focused"
+        app:indicator_drawable_unselected="@drawable/page_indicator_unfocused"
+        app:indicator_height="8dp"
+        app:indicator_width="8dp" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/banner"
+        app:layout_heightPercent="70%">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+
+
+</com.zhy.android.percent.support.PercentRelativeLayout>
