@@ -3,23 +3,14 @@ package com.bwie.demo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-
-
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
-
 
 import com.google.gson.Gson;
-
 import com.squareup.okhttp.Request;
-
-
 import com.youth.banner.Banner;
-
 import com.youth.banner.BannerConfig;
 import com.zhy.http.okhttp.OkHttpUtils;
-
-
 import com.zhy.http.okhttp.callback.StringCallback;
 
 
@@ -36,7 +27,7 @@ MainActivity extends AppCompatActivity {
     private String titlepath="http://i.dxy.cn/snsapi/event/count/list/all";
     private List<String> stringList=new ArrayList<>();
     private List<String> titleList=new ArrayList<>();
-
+    private List<ContentBean> contentBeanList=new ArrayList<>();
     private Banner banner;
 
 
@@ -48,11 +39,12 @@ MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         banner=  (Banner) findViewById(R.id.banner);
         getdate();
     }
 
-
+    //请求正文数据
     public void getdate(){
 
         OkHttpUtils.get().url(path).build().execute(new StringCallback() {
@@ -66,13 +58,19 @@ MainActivity extends AppCompatActivity {
 
 
                 Bean bean = new Gson().fromJson(response, Bean.class);
+                List<Bean.ItemsBean> items = bean.getItems();
+                for (int i = 0; i < items.size(); i++) {
 
-                String content = bean.getItems().get(5).getContent();
+                    ContentBean contentBean = new Gson().fromJson(items.get(i).getContent(), ContentBean.class);
+                    contentBeanList.add(contentBean);
 
-                ContentBean contentBean = new Gson().fromJson(content, ContentBean.class);
+                }
+                MyAdapter myAdapter = new MyAdapter(items,contentBeanList,MainActivity.this);
+                recyclerView.setAdapter(myAdapter);
 
             }
         });
+        //请求轮播图
         OkHttpUtils.get().url(titlepath).build().execute(new StringCallback() {
 
             @Override
@@ -91,11 +89,12 @@ MainActivity extends AppCompatActivity {
                     stringList.add(items.get(i).getPath());
                     titleList.add(items.get(i).getTitle());
                 }
-
+                //设置轮播图的类型
                 banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
                 banner.setImageLoader(new GImager());
                 banner.setImages(stringList);
                 banner.setBannerTitles(titleList);
+                //开始轮播
                 banner.start();
 
             }
